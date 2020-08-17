@@ -1,0 +1,13 @@
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.exe
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.deps.json
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.runtimeconfig.json
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.runtimeconfig.dev.json
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.dll
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\CompareTable.pdb
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.csprojAssemblyReference.cache
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.AssemblyInfoInputs.cache
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.AssemblyInfo.cs
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.csproj.CoreCompileInputs.cache
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.dll
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.pdb
+C:\Users\v-vyin\source\repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.genruntimeconfig.cache

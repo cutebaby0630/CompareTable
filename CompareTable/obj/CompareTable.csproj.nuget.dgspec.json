@@ -1,0 +1,138 @@
+{
+  "format": 1,
+  "restore": {
+    "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj": {}
+  },
+  "projects": {
+    "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj",
+        "projectName": "CompareTable",
+        "projectPath": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj",
+        "packagesPath": "C:\\Users\\v-vyin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\v-vyin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {
+              "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj": {
+                "projectPath": "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj",
+        "projectName": "SqlServerHelper.Core",
+        "projectPath": "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj",
+        "packagesPath": "C:\\Users\\v-vyin\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\obj\\",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "C:\\Users\\v-vyin\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "netcoreapp3.1"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "netcoreapp3.1": {
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "netcoreapp3.1": {
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.30, )"
+            },
+            "Dapper.Contrib": {
+              "target": "Package",
+              "version": "[2.0.30, )"
+            },
+            "EPPlus": {
+              "target": "Package",
+              "version": "[5.1.2, )"
+            },
+            "System.CodeDom": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "System.Data.SqlClient": {
+              "target": "Package",
+              "version": "[4.6.0, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

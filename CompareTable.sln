@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30406.217
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompareTable", "CompareTable\CompareTable.csproj", "{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {74A7FD6D-F2E9-4B29-94BE-78069CA52849}
+	EndGlobalSection
+EndGlobal
