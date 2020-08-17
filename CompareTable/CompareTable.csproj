@@ -5,4 +5,42 @@
     <TargetFramework>netcoreapp3.1</TargetFramework>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Include="Template\GetTableToTemp.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetTableToTemp.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="3.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\SqlServerHelper.Core\SqlServerHelper.Core\SqlServerHelper.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="appsetting.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Template\GetTableToTemp.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>GetTableToTemp.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Template\GetTableToTemp.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GetTableToTemp.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
 </Project>

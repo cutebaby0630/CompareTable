@@ -5,6 +5,8 @@ VisualStudioVersion = 16.0.30406.217
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CompareTable", "CompareTable\CompareTable.csproj", "{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SqlServerHelper.Core", "..\SqlServerHelper.Core\SqlServerHelper.Core\SqlServerHelper.Core.csproj", "{2F5A6151-218B-47C6-BC41-DF1763EA6661}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BAFB5F9D-9B91-49A5-868B-D618DF5B7569}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F5A6151-218B-47C6-BC41-DF1763EA6661}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F5A6151-218B-47C6-BC41-DF1763EA6661}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F5A6151-218B-47C6-BC41-DF1763EA6661}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F5A6151-218B-47C6-BC41-DF1763EA6661}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

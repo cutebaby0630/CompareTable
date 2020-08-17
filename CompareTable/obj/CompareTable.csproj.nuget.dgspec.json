@@ -41,6 +41,12 @@
       },
       "frameworks": {
         "netcoreapp3.1": {
+          "dependencies": {
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[3.1.7, )"
+            }
+          },
           "imports": [
             "net461",
             "net462",
@@ -105,6 +111,10 @@
             "EPPlus": {
               "target": "Package",
               "version": "[5.1.2, )"
+            },
+            "Microsoft.Extensions.Configuration.Json": {
+              "target": "Package",
+              "version": "[3.1.7, )"
             },
             "System.CodeDom": {
               "target": "Package",
