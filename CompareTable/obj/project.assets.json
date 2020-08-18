@@ -1344,7 +1344,6 @@
           "Dapper": "2.0.30",
           "Dapper.Contrib": "2.0.30",
           "EPPlus": "5.1.2",
-          "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "System.CodeDom": "4.7.0",
           "System.Data.SqlClient": "4.6.0"
         },
@@ -4963,20 +4962,25 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\v-vyin\\.nuget\\packages\\": {}
+    "C:\\Users\\user\\.nuget\\packages\\": {},
+    "C:\\Microsoft\\Xamarin\\NuGet\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj",
+      "projectUniqueName": "C:\\Users\\user\\Source\\Repos\\CompareTable\\CompareTable\\CompareTable.csproj",
       "projectName": "CompareTable",
-      "projectPath": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\CompareTable.csproj",
-      "packagesPath": "C:\\Users\\v-vyin\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\v-vyin\\source\\repos\\CompareTable\\CompareTable\\obj\\",
+      "projectPath": "C:\\Users\\user\\Source\\Repos\\CompareTable\\CompareTable\\CompareTable.csproj",
+      "packagesPath": "C:\\Users\\user\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\user\\Source\\Repos\\CompareTable\\CompareTable\\obj\\",
       "projectStyle": "PackageReference",
+      "fallbackFolders": [
+        "C:\\Microsoft\\Xamarin\\NuGet\\"
+      ],
       "configFilePaths": [
-        "C:\\Users\\v-vyin\\AppData\\Roaming\\NuGet\\NuGet.Config",
-        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        "C:\\Users\\user\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Xamarin.Offline.config"
       ],
       "originalTargetFrameworks": [
         "netcoreapp3.1"
@@ -4988,8 +4992,8 @@
       "frameworks": {
         "netcoreapp3.1": {
           "projectReferences": {
-            "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj": {
-              "projectPath": "C:\\Users\\v-vyin\\source\\repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj"
+            "C:\\Users\\user\\Source\\Repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj": {
+              "projectPath": "C:\\Users\\user\\Source\\Repos\\SqlServerHelper.Core\\SqlServerHelper.Core\\SqlServerHelper.Core.csproj"
             }
           }
         }
@@ -5023,7 +5027,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.401\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\3.1.302\\RuntimeIdentifierGraph.json"
       }
     }
   }

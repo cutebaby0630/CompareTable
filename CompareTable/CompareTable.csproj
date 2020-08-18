@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -10,6 +10,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GetTableToTemp.tt</DependentUpon>
+    </None>
+    <None Include="Template\OverrideTable.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OverrideTable.tt</DependentUpon>
     </None>
   </ItemGroup>
 
@@ -29,6 +34,10 @@
       <Generator>TextTemplatingFilePreprocessor</Generator>
       <LastGenOutput>GetTableToTemp.cs</LastGenOutput>
     </None>
+    <None Update="Template\OverrideTable.tt">
+      <Generator>TextTemplatingFilePreprocessor</Generator>
+      <LastGenOutput>OverrideTable.cs</LastGenOutput>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -40,6 +49,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>GetTableToTemp.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Template\OverrideTable.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>OverrideTable.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

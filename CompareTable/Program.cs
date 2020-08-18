@@ -50,6 +50,9 @@ namespace CompareTable
             helper.SendMail(toMailList, ccMailList, null, subject, body, null);
             //Step3. 覆蓋
             //Step3.1 #table覆蓋SKHDBA中的table
+            OverrideTable overrideTable = new OverrideTable(tableList);
+            string overrideTable_sql = overrideTable.TransformText();
+            DataTable resault_dt = sqlHelper.FillTableAsync(overrideTable_sql).Result;
         }
     }
     #region -- DataTable to HTML--
@@ -84,30 +87,5 @@ namespace CompareTable
         }
     }
     #endregion
-    #region -- Send Email --
-    public class SendEmail
-    {
-        public string _Message { get; set; }
-        public string _tablename { get; set; }
-        public DataTable _compareresult { get; set; }
-        public void SendResultEmail(string _tablename, DataTable _compareresult)
-        {
-            DatatableToHTML datatableToHTML = new DatatableToHTML();
-            var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
-            string subject = $"Initial Data異動 {DateTime.Now.ToString("yyyyMMdd")}"; //信件主旨
-            string body = $"Hi All, \r\n\r\n{DateTime.Now.ToString("yyyyMMdd")} {_tablename}.csv更改如下表，\r\n\r\n{(datatableToHTML.ToHTML(_compareresult) == null ? string.Empty : datatableToHTML.ToHTML(_compareresult))}\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
-            string attachments = null;//附件
-            /*var fileName = @"D:\微軟MCS\SchedulerDB_Excel\" + excelname;//附件位置
-            if (File.Exists(fileName.ToString()))
-            {
-                attachments = fileName.ToString();
-            }*/
-            string toMailList = "lovemath0630@gmail.com;v-vyin@microsoft.com";//收件者
-            string ccMailList = "";//CC收件者
-
-            helper.SendMail(toMailList, ccMailList, null, subject, body, null);
-
-        }
-    }
-        #endregion
+    
     }

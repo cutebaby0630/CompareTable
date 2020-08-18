@@ -19,9 +19,9 @@ namespace CompareTable.Template
     /// Class to produce the template output
     /// </summary>
     
-    #line 1 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+    #line 1 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public partial class GetTableToTemp : GetTableToTempBase
+    public partial class OverrideTable : OverrideTableBase
     {
 #line hidden
         /// <summary>
@@ -30,194 +30,96 @@ namespace CompareTable.Template
         public virtual string TransformText()
         {
             
-            #line 7 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 7 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
  string comma = string.Empty; 
             
             #line default
             #line hidden
             this.Write("\r\nIF OBJECT_ID(\'TEMPDB..#");
             
-            #line 9 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 9 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
             this.Write("_bak\') IS NOT NULL DROP TABLE #");
             
-            #line 9 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 9 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
             this.Write("_bak\r\nCREATE TABLE [#");
             
-            #line 10 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 10 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
             this.Write("_bak] (\r\n");
             
-            #line 11 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 11 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName} {p.DataTypeName} {(p.IsNullable?"null":"not null")}").ToArray())));
             
             #line default
             #line hidden
             this.Write("\r\n)\r\n\r\ninsert into [#");
             
-            #line 14 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 14 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
             this.Write("_bak](\r\n");
             
-            #line 15 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 15 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray())));
             
             #line default
             #line hidden
             this.Write("\r\n)\r\nselect \r\n");
             
-            #line 18 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 18 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray())));
             
             #line default
             #line hidden
             this.Write("\r\nfrom [10.1.222.182].HISBILLINGDB.dbo.[");
             
-            #line 19 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 19 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
-            this.Write("]\r\n\r\n\r\nSELECT \'Delete\' as Item ,s.* \r\nFROM [");
+            this.Write("]\r\n\r\ninsert into SKHDBA.dbo.[");
             
-            #line 23 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 21 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
-            this.Write("] s\r\nLEFT JOIN [#");
+            this.Write("_vicky](\r\n");
             
-            #line 24 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
+            #line 22 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray())));
+            
+            #line default
+            #line hidden
+            this.Write("\r\n)\r\nselect \r\n");
+            
+            #line 25 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
+            this.Write(this.ToStringHelper.ToStringWithCulture(string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray())));
+            
+            #line default
+            #line hidden
+            this.Write("\r\nfrom [#");
+            
+            #line 26 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
             
             #line default
             #line hidden
-            this.Write("_bak] t ON ");
-            
-            #line 24 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nWHERE t.");
-            
-            #line 25 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.Where(s => s.IsPrimaryKey).First().ColumnName));
-            
-            #line default
-            #line hidden
-            this.Write(" IS NULL\r\nUNION ALL\r\nSELECT \'Create\' as Item ,t.* \r\nFROM [");
-            
-            #line 28 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("] s\r\nRIGHT JOIN [#");
-            
-            #line 29 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("_bak] t ON ");
-            
-            #line 29 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nWHERE s.");
-            
-            #line 30 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.Where(s => s.IsPrimaryKey).First().ColumnName));
-            
-            #line default
-            #line hidden
-            this.Write(" IS NULL\r\nUNION ALL\r\nSELECT \'Edit_BF\' as Item ,");
-            
-            #line 32 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" ,\r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} ", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nFROM [");
-            
-            #line 33 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("] s\r\nINNER JOIN [#");
-            
-            #line 34 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("_bak] t ON ");
-            
-            #line 34 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nWHERE ");
-            
-            #line 35 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join("\tOR \r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("ISNULL(CONVERT(NVARCHAR(MAX),s.{0}),'') <> ISNULL(CONVERT(NVARCHAR(MAX),t.{0}),'')", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nUNION ALL\r\nSELECT \'Edit_AF\' as Item ,");
-            
-            #line 37 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" ,\r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format(" t.{0} ", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nFROM [");
-            
-            #line 38 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("] s\r\nINNER JOIN [#");
-            
-            #line 39 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));
-            
-            #line default
-            #line hidden
-            this.Write("_bak] t ON ");
-            
-            #line 39 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\nWHERE ");
-            
-            #line 40 "C:\Users\user\Source\Repos\CompareTable\CompareTable\Template\GetTableToTemp.tt"
-            this.Write(this.ToStringHelper.ToStringWithCulture(String.Join("\tOR \r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("ISNULL(CONVERT(NVARCHAR(MAX),s.{0}),'') <> ISNULL(CONVERT(NVARCHAR(MAX),t.{0}),'')", c.ColumnName)).ToArray())));
-            
-            #line default
-            #line hidden
-            this.Write("\r\n");
+            this.Write("_bak]");
             return this.GenerationEnvironment.ToString();
         }
     }
@@ -229,7 +131,7 @@ namespace CompareTable.Template
     /// Base class for this transformation
     /// </summary>
     [global::System.CodeDom.Compiler.GeneratedCodeAttribute("Microsoft.VisualStudio.TextTemplating", "16.0.0.0")]
-    public class GetTableToTempBase
+    public class OverrideTableBase
     {
         #region Fields
         private global::System.Text.StringBuilder generationEnvironmentField;

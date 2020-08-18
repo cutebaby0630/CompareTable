@@ -109,6 +109,16 @@ namespace CompareTable.Template
         }
     }
 
+    public partial class OverrideTable
+    {
+        private List<SqlServerDBColumnInfo> DataColList { set; get; }
+
+        public OverrideTable(List<SqlServerDBColumnInfo> dataColList)
+        {
+            DataColList = dataColList;
+        }
+    }
+
 
     #region ENumsTemplate
 
