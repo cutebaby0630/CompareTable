@@ -820,6 +820,7 @@
           "Dapper": "2.0.30",
           "Dapper.Contrib": "2.0.30",
           "EPPlus": "5.1.2",
+          "Microsoft.Extensions.Configuration.Json": "3.1.7",
           "System.CodeDom": "4.7.0",
           "System.Data.SqlClient": "4.6.0"
         },

@@ -1,43 +1,109 @@
 ﻿using CompareTable.Template;
 using Microsoft.Extensions.Configuration;
+using OfficeOpenXml;
+using OfficeOpenXml.Style;
 using SqlServerHelper.Core;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
+using System.Drawing;
+using System.Globalization;
 using System.Linq;
+using System.Reflection;
 
 namespace CompareTable
 {
+    public static class ExcelExtensions
+    {
+        // SetQuickStyle，指定前景色/背景色/水平對齊
+        public static void SetQuickStyle(this ExcelRange range,
+            Color fontColor,
+            Color bgColor = default(Color),
+            ExcelHorizontalAlignment hAlign = ExcelHorizontalAlignment.Left)
+        {
+            range.Style.Font.Color.SetColor(fontColor);
+            if (bgColor != default(Color))
+            {
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid; // 一定要加這行..不然會報錯
+                range.Style.Fill.BackgroundColor.SetColor(bgColor);
+            }
+            range.Style.HorizontalAlignment = hAlign;
+        }
+
+        //讓文字上有連結
+        public static void SetHyperlink(this ExcelRange range, Uri uri)
+        {
+            range.Hyperlink = uri;
+            range.Style.Font.UnderLine = true;
+            range.Style.Font.Color.SetColor(Color.Blue);
+        }
+    }
     class Program
     {
         static void Main(string[] args)
         {
             //Step1. 從182取出table 放入#tabl
             //Step1.1 連線到225.17
-            var tablename = "CHGMChargeItem";
+            string[] tablenames = new string[] { "ODRMPackageOrder", "CHGMChargeItem" };
+            //var tablename = "CHGMChargeItem";
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsetting.json", optional: true, reloadOnChange: true).Build();
-            string connString = config.GetConnectionString("DefaultConnection");
-            SqlServerDBHelper sqlHelper = new SqlServerDBHelper(string.Format(connString, "HISBILLINGDB", "msdba", "1qaz@wsx"));
-            SqlServerTableHelper sqltablehelper = new SqlServerTableHelper(string.Format(connString, "HISBILLINGDB", "msdba", "1qaz@wsx"));
-            List<SqlServerDBColumnInfo> tableList = sqltablehelper.FillTableList($"{tablename}").FillColumnList().GetTableList().First().SqlServerDBColumnList;
-            for (int x = 0; x <= tableList.Count - 1; x++)
+            string connString_default = config.GetConnectionString("DefaultConnection");
+            string connString_prod = config.GetConnectionString("PRODConnection");
+            string comparetable = null;
+
+            List<CompareTables> compareTables = new List<CompareTables>();
+            foreach (string tablename in tablenames)
             {
-                if (tableList[x].DataTypeName == "BIT()")
+                bool tablename_CHG = tablename.Contains("CHG");
+                bool tablename_CLA = tablename.Contains("CLA");
+                string dbname = "HISDB";
+                if (tablename_CHG || tablename_CLA)
                 {
-                    tableList[x].DataTypeName = "BIT";
+                    dbname = "HISBILLINGDB";
                 }
+                SqlServerDBHelper sqlHelper = new SqlServerDBHelper(string.Format(connString_default, dbname, "msdba", "1qaz@wsx"));
+                SqlServerTableHelper sqltablehelper = new SqlServerTableHelper(string.Format(connString_prod, dbname, "msdba", "1qaz@wsx"));
+                List<SqlServerDBColumnInfo> tableList = sqltablehelper.FillTableList(tablename).FillColumnList().GetTableList().First().SqlServerDBColumnList;
+                for (int x = 0; x <= tableList.Count - 1; x++)
+                {
+                    if (tableList[x].DataTypeName == "BIT()")
+                    {
+                        tableList[x].DataTypeName = "BIT";
+                    }
+                }
+                //Step1.2 取出222.182相對應table放入#table
+                GetTableToTemp getTableToTemp = new GetTableToTemp(tableList, dbname);
+                string getTableToTemp_sql = getTableToTemp.TransformText();
+                DataTable compare_dt = sqlHelper.FillTableAsync(getTableToTemp_sql).Result;
+
+                //Step3. 覆蓋
+                //Step3.1 #table覆蓋SKHDBA中的table
+                OverrideTable overrideTable = new OverrideTable(tableList, dbname);
+                string overrideTable_sql = overrideTable.TransformText();
+                DataTable resault_dt = sqlHelper.FillTableAsync(overrideTable_sql).Result;
+
+                compareTables.Add(new CompareTables()
+                {
+                    tableName = tablename,
+                    compareTable = compare_dt,
+                    resultTable = resault_dt
+
+                });
             }
-            //Step1.2 取出222.182相對應table放入#table
-            GetTableToTemp getTableToTemp = new GetTableToTemp(tableList);
-            string getTableToTemp_sql = getTableToTemp.TransformText();
-            DataTable compare_dt = sqlHelper.FillTableAsync(getTableToTemp_sql).Result;
+
+            DatatableToHTML datatableToHTML = new DatatableToHTML();
+            for (int count = 0; count <= compareTables.Count - 1; count++)
+            {
+                comparetable = comparetable + $"\r\n\r\n {compareTables[count].tableName}:\r\n\r\n{datatableToHTML.ToHTML(compareTables[count].compareTable)}";
+            }
+
             //Step2. #table跟225.17中比較
             //Step2.1 compare 兩個table
             //Step2.2 將結果發Email
-            DatatableToHTML datatableToHTML = new DatatableToHTML();
             var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
             string subject = $"Initial Data異動 {DateTime.Now.ToString("yyyyMMdd")}"; //信件主旨
-            string body = $"Hi All, \r\n\r\n{DateTime.Now.ToString("yyyyMMdd")} {tablename}.csv更改如下表，\r\n\r\n{(datatableToHTML.ToHTML(compare_dt) == null ? string.Empty : datatableToHTML.ToHTML(compare_dt))}\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
+            string body = $"Hi All, \r\n\r\n{DateTime.Now.ToString("yyyyMMdd")} 表格異動如下，\r\n\r\n{comparetable}\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
             string attachments = null;//附件
             /*var fileName = @"D:\微軟MCS\SchedulerDB_Excel\" + excelname;//附件位置
             if (File.Exists(fileName.ToString()))
@@ -48,11 +114,7 @@ namespace CompareTable
             string ccMailList = "";//CC收件者
 
             helper.SendMail(toMailList, ccMailList, null, subject, body, null);
-            //Step3. 覆蓋
-            //Step3.1 #table覆蓋SKHDBA中的table
-            OverrideTable overrideTable = new OverrideTable(tableList);
-            string overrideTable_sql = overrideTable.TransformText();
-            DataTable resault_dt = sqlHelper.FillTableAsync(overrideTable_sql).Result;
+
         }
     }
     #region -- DataTable to HTML--
@@ -87,5 +149,117 @@ namespace CompareTable
         }
     }
     #endregion
-    
+    public class CompareTables
+    {
+        public string tableName { get; set; }
+        public DataTable resultTable { get; set; }
+        public DataTable compareTable { get; set; }
     }
+    #region -- Data to excel
+    public class ImportDBData
+    {
+        private ExcelWorksheet _sheet { get; set; }
+        private int _rowIndex { get; set; }
+        private int _colIndex { get; set; }
+        private DataTable _dt { get; set; }
+        public void ImportData(DataTable dt, ExcelWorksheet sheet, int rowIndex, int colIndex)
+        {
+            _sheet = sheet;
+            _rowIndex = rowIndex;
+            _colIndex = colIndex;
+            _dt = dt;
+            _sheet.Cells[_rowIndex - 1, _colIndex].Value = "返回目錄";
+            _sheet.Cells[_rowIndex - 1, _colIndex].SetHyperlink(new Uri($"#'目錄'!A1", UriKind.Relative));
+            string temp_MedicalNoteNo = null;
+            string temp_ExaRequestNo = null;
+            string temp_DVC_CHRT = null;
+            //3.1塞columnName 到Row 
+            for (int columnNameIndex = 0; columnNameIndex <= _dt.Columns.Count - 1; columnNameIndex++)
+            {
+                MemberInfo property = typeof(DBData).GetProperty((_dt.Columns[columnNameIndex].ColumnName == null ? string.Empty : _dt.Columns[columnNameIndex].ColumnName));
+                var attribute = property.GetCustomAttributes(typeof(DisplayNameAttribute), true)
+                                        .Cast<DisplayNameAttribute>().Single();
+                string columnName = attribute.DisplayName;
+                _sheet.Cells[_rowIndex, _colIndex++].Value = columnName;
+
+
+            }
+            _sheet.Cells[_rowIndex, 1, _rowIndex, _colIndex - 1]
+                 .SetQuickStyle(Color.Black, Color.LightPink, ExcelHorizontalAlignment.Center);
+
+            //將對應值放入
+            foreach (var dbdata in _dblist)
+            {
+                if (_sheet.ToString() == (dbdata.XRYRoomCode == null ? "Blank" : dbdata.XRYRoomCode) && date.ToString("yyyy-MM-dd") == (dbdata.Start != DateTime.MinValue ? dbdata.Start.ToString("yyyy-MM-dd") : dbdata.PlanDate.ToString("yyyy-MM-dd")))
+                {
+                    _rowIndex++;
+                    _colIndex = 1;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.RESRoomCode;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.XRYRoomCode;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.CalendarGroupName;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.MedicalNoteNo;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.ExaRequestNo;
+                    _sheet.Cells[_rowIndex, _colIndex].Value = dbdata.Start;
+                    _sheet.Cells[_rowIndex, _colIndex].Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
+                    _sheet.Cells[_rowIndex, _colIndex++].Style.Numberformat.Format = "yyyy/MM/dd HH:mm:ss";
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_CHRT;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_RQNO;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_DATE;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_STTM;
+                    if (dbdata.MedicalNoteNo == (temp_MedicalNoteNo == null ? string.Empty : temp_MedicalNoteNo) && dbdata.ExaRequestNo == (temp_ExaRequestNo == null ? string.Empty : temp_ExaRequestNo) && dbdata.DVC_CHRT == (temp_DVC_CHRT == null ? string.Empty : temp_DVC_CHRT))
+                    {
+                        _sheet.Cells[_rowIndex--, _colIndex].Value = "v";
+                        _sheet.Cells[_rowIndex++, _colIndex].Value = "v";
+                    }
+                    temp_MedicalNoteNo = dbdata.MedicalNoteNo;
+                    temp_ExaRequestNo = dbdata.ExaRequestNo;
+                    temp_DVC_CHRT = dbdata.DVC_CHRT;
+                }
+            }
+
+            //Autofit
+            int startColumn = _sheet.Dimension.Start.Column;
+            int endColumn = _sheet.Dimension.End.Column;
+            for (int count = startColumn; count <= endColumn; count++)
+            {
+                _sheet.Column(count).AutoFit();
+            }
+
+
+        }
+        public void GenFirstSheet(ExcelPackage excel, List<string> list)
+        {
+            int rowIndex = 1;
+            int colIndex = 1;
+
+            int maxCol = 0;
+
+            ExcelWorksheet firstSheet = excel.Workbook.Worksheets.Add("目錄");
+
+            firstSheet.Cells[rowIndex, colIndex++].Value = "";
+            firstSheet.Cells[rowIndex, colIndex++].Value = "檢查時間";
+
+            firstSheet.Cells[rowIndex, 1, rowIndex, colIndex - 1]
+                .SetQuickStyle(Color.Black, Color.LightPink, ExcelHorizontalAlignment.Center);
+
+            maxCol = Math.Max(maxCol, colIndex - 1);
+
+            foreach (string info in list)
+            {
+                rowIndex++;
+                colIndex = 1;
+
+                firstSheet.Cells[rowIndex, colIndex++].Value = rowIndex - 1;
+                firstSheet.Cells[rowIndex, colIndex++].Value = info;
+                firstSheet.Cells[rowIndex, colIndex - 1].SetHyperlink(new Uri($"#'{(string.IsNullOrEmpty(info) ? "Blank" : info)}'!A1", UriKind.Relative));
+            }
+
+            for (int i = 1; i <= maxCol; i++)
+            {
+                firstSheet.Column(i).AutoFit();
+            }
+        }
+
+    }
+    #endregion
+}

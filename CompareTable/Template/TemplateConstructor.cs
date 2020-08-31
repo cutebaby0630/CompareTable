@@ -102,20 +102,27 @@ namespace CompareTable.Template
     public partial class GetTableToTemp
     {
         private List<SqlServerDBColumnInfo> DataColList { set; get; }
+        private string DBName { get; set; }
 
-        public GetTableToTemp(List<SqlServerDBColumnInfo> dataColList)
+        public GetTableToTemp(List<SqlServerDBColumnInfo> dataColList, string dbName)
         {
             DataColList = dataColList;
+            DBName = dbName;
+
         }
     }
 
     public partial class OverrideTable
     {
         private List<SqlServerDBColumnInfo> DataColList { set; get; }
+        private string DBName { get; set; }
 
-        public OverrideTable(List<SqlServerDBColumnInfo> dataColList)
+
+        public OverrideTable(List<SqlServerDBColumnInfo> dataColList, string dbName)
         {
             DataColList = dataColList;
+            DBName = dbName;
+
         }
     }
 

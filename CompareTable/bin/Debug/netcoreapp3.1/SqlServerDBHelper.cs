@@ -494,7 +494,7 @@ namespace SqlServerHelper.Core
             using (SqlCommand cmd = new SqlCommand(sql, _connection))
             {
                 DataTable dt = new DataTable();
-
+                cmd.CommandTimeout = 0;
                 if (_connection.State != ConnectionState.Open)
                 {
                     _connection.Open();

@@ -16,25 +16,25 @@ insert into [#<#= DataColList.First().TableName #>_bak](
 )
 select 
 <#= string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray()) #>
-from [10.1.222.182].HISBILLINGDB.dbo.[<#= DataColList.First().TableName #>]
+from [10.1.222.182].[<#= DBName #>].dbo.[<#= DataColList.First().TableName #>]
 
 
 SELECT 'Delete' as Item ,s.* 
-FROM [<#= DataColList.First().TableName #>] s
+FROM SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky] s
 LEFT JOIN [#<#= DataColList.First().TableName #>_bak] t ON <#= String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray()) #>
 WHERE t.<#= DataColList.Where(s => s.IsPrimaryKey).First().ColumnName #> IS NULL
 UNION ALL
 SELECT 'Create' as Item ,t.* 
-FROM [<#= DataColList.First().TableName #>] s
+FROM SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky] s
 RIGHT JOIN [#<#= DataColList.First().TableName #>_bak] t ON <#= String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray()) #>
 WHERE s.<#= DataColList.Where(s => s.IsPrimaryKey).First().ColumnName #> IS NULL
 UNION ALL
 SELECT 'Edit_BF' as Item ,<#= String.Join(" ,\r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} ", c.ColumnName)).ToArray()) #>
-FROM [<#= DataColList.First().TableName #>] s
+FROM SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky] s
 INNER JOIN [#<#= DataColList.First().TableName #>_bak] t ON <#= String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray()) #>
 WHERE <#= String.Join("\tOR \r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("ISNULL(CONVERT(NVARCHAR(MAX),s.{0}),'') <> ISNULL(CONVERT(NVARCHAR(MAX),t.{0}),'')", c.ColumnName)).ToArray()) #>
 UNION ALL
 SELECT 'Edit_AF' as Item ,<#= String.Join(" ,\r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format(" t.{0} ", c.ColumnName)).ToArray()) #>
-FROM [<#= DataColList.First().TableName #>] s
+FROM SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky] s
 INNER JOIN [#<#= DataColList.First().TableName #>_bak] t ON <#= String.Join(" AND ",DataColList.Where(s => s.IsPrimaryKey).Cast<SqlServerDBColumnInfo>().Select(c => String.Format("s.{0} = t.{0}", c.ColumnName)).ToArray()) #>
 WHERE <#= String.Join("\tOR \r\n",DataColList.Cast<SqlServerDBColumnInfo>().Select(c => String.Format("ISNULL(CONVERT(NVARCHAR(MAX),s.{0}),'') <> ISNULL(CONVERT(NVARCHAR(MAX),t.{0}),'')", c.ColumnName)).ToArray()) #>
