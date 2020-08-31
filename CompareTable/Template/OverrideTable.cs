@@ -98,7 +98,7 @@ namespace CompareTable.Template
             
             #line default
             #line hidden
-            this.Write("]\r\n\r\ndelete from [");
+            this.Write("]\r\n\r\ndelete from SKHDBA.dbo.[");
             
             #line 21 "C:\Users\v-vyin\source\repos\CompareTable\CompareTable\Template\OverrideTable.tt"
             this.Write(this.ToStringHelper.ToStringWithCulture(DataColList.First().TableName));

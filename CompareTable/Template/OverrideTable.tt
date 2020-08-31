@@ -18,7 +18,7 @@ select
 <#= string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray()) #>
 from [10.1.222.182].[<#= DBName #>].dbo.[<#= DataColList.First().TableName #>]
 
-delete from [<#= DataColList.First().TableName #>_vicky]
+delete from SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky]
 
 insert into SKHDBA.dbo.[<#= DataColList.First().TableName #>_vicky](
 <#= string.Join(",\r\n", DataColList.Select(p => $"\t{p.ColumnName}").ToArray()) #>
