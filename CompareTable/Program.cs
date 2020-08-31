@@ -9,8 +9,10 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace CompareTable
 {
@@ -43,6 +45,7 @@ namespace CompareTable
     {
         static void Main(string[] args)
         {
+            var fliepath = $@"C:\Users\v-vyin\SchedulerDB_ExcelFile\{"CompareTable" + DateTime.Now.ToString("yyyyMMddhhmm")}";
             //Step1. 從182取出table 放入#tabl
             //Step1.1 連線到225.17
             string[] tablenames = new string[] { "ODRMPackageOrder", "CHGMChargeItem" };
@@ -91,7 +94,37 @@ namespace CompareTable
 
                 });
             }
+            var excelname = new FileInfo("CompareTable" + DateTime.Now.ToString("yyyyMMddhhdd") + ".xlsx");
+            var importDBData = new ImportDBData();
+            using (var excel = new ExcelPackage(excelname))
+            {
+                importDBData.GenFirstSheet(excel, tablenames);
+                Byte[] bin = excel.GetAsByteArray();
+                File.WriteAllBytes(fliepath.ToString() + @"\" + excelname, bin);
+            }
+            foreach (var table in compareTables)
+            {
+                //ExcelPackage.LicenseContext = LicenseContext.Commercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var excel = new ExcelPackage(excelname))
+                {
 
+                    for (int sheetnum = 0; sheetnum <= tablenames.Length - 1; sheetnum++)
+                    {
+                        //Step 3.將對應的List 丟到各Sheet中
+                        ExcelWorksheet sheet = excel.Workbook.Worksheets.Add(tablenames[sheetnum]);
+                        //抽function
+                        int rowIndex = 2;
+                        int colIndex = 1;
+                        importDBData.ImportData(table.compareTable, sheet, rowIndex, colIndex);
+                    }
+                    // Step 4.Export EXCEL
+                    Byte[] bin = excel.GetAsByteArray();
+                    File.WriteAllBytes(fliepath.ToString() + @"\" + excelname, bin);
+
+                }
+
+            }
             DatatableToHTML datatableToHTML = new DatatableToHTML();
             for (int count = 0; count <= compareTables.Count - 1; count++)
             {
@@ -170,52 +203,27 @@ namespace CompareTable
             _dt = dt;
             _sheet.Cells[_rowIndex - 1, _colIndex].Value = "返回目錄";
             _sheet.Cells[_rowIndex - 1, _colIndex].SetHyperlink(new Uri($"#'目錄'!A1", UriKind.Relative));
-            string temp_MedicalNoteNo = null;
-            string temp_ExaRequestNo = null;
-            string temp_DVC_CHRT = null;
+
             //3.1塞columnName 到Row 
             for (int columnNameIndex = 0; columnNameIndex <= _dt.Columns.Count - 1; columnNameIndex++)
             {
-                MemberInfo property = typeof(DBData).GetProperty((_dt.Columns[columnNameIndex].ColumnName == null ? string.Empty : _dt.Columns[columnNameIndex].ColumnName));
-                var attribute = property.GetCustomAttributes(typeof(DisplayNameAttribute), true)
-                                        .Cast<DisplayNameAttribute>().Single();
-                string columnName = attribute.DisplayName;
-                _sheet.Cells[_rowIndex, _colIndex++].Value = columnName;
-
-
+                _sheet.Cells[_rowIndex, _colIndex++].Value = (_dt.Columns[columnNameIndex].ColumnName == null ? string.Empty : _dt.Columns[columnNameIndex].ColumnName);
             }
             _sheet.Cells[_rowIndex, 1, _rowIndex, _colIndex - 1]
                  .SetQuickStyle(Color.Black, Color.LightPink, ExcelHorizontalAlignment.Center);
 
             //將對應值放入
-            foreach (var dbdata in _dblist)
+            foreach (DataRow row in _dt.Rows)
             {
-                if (_sheet.ToString() == (dbdata.XRYRoomCode == null ? "Blank" : dbdata.XRYRoomCode) && date.ToString("yyyy-MM-dd") == (dbdata.Start != DateTime.MinValue ? dbdata.Start.ToString("yyyy-MM-dd") : dbdata.PlanDate.ToString("yyyy-MM-dd")))
+                _rowIndex++;
+                _colIndex = 1;
+                for (int num = 0; num <= _dt.Columns.Count - 1; num++)
                 {
-                    _rowIndex++;
-                    _colIndex = 1;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.RESRoomCode;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.XRYRoomCode;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.CalendarGroupName;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.MedicalNoteNo;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.ExaRequestNo;
-                    _sheet.Cells[_rowIndex, _colIndex].Value = dbdata.Start;
-                    _sheet.Cells[_rowIndex, _colIndex].Style.Numberformat.Format = DateTimeFormatInfo.CurrentInfo.ShortDatePattern;
-                    _sheet.Cells[_rowIndex, _colIndex++].Style.Numberformat.Format = "yyyy/MM/dd HH:mm:ss";
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_CHRT;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_RQNO;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_DATE;
-                    _sheet.Cells[_rowIndex, _colIndex++].Value = dbdata.DVC_STTM;
-                    if (dbdata.MedicalNoteNo == (temp_MedicalNoteNo == null ? string.Empty : temp_MedicalNoteNo) && dbdata.ExaRequestNo == (temp_ExaRequestNo == null ? string.Empty : temp_ExaRequestNo) && dbdata.DVC_CHRT == (temp_DVC_CHRT == null ? string.Empty : temp_DVC_CHRT))
-                    {
-                        _sheet.Cells[_rowIndex--, _colIndex].Value = "v";
-                        _sheet.Cells[_rowIndex++, _colIndex].Value = "v";
-                    }
-                    temp_MedicalNoteNo = dbdata.MedicalNoteNo;
-                    temp_ExaRequestNo = dbdata.ExaRequestNo;
-                    temp_DVC_CHRT = dbdata.DVC_CHRT;
+                    _sheet.Cells[_rowIndex, _colIndex++].Value = row[num].ToString();
                 }
             }
+
+
 
             //Autofit
             int startColumn = _sheet.Dimension.Start.Column;
@@ -227,7 +235,7 @@ namespace CompareTable
 
 
         }
-        public void GenFirstSheet(ExcelPackage excel, List<string> list)
+        public void GenFirstSheet(ExcelPackage excel, string[] list)
         {
             int rowIndex = 1;
             int colIndex = 1;
