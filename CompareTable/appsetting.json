@@ -1,12 +1,18 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=10.1.225.17;Initial Catalog={0};Integrated Security=False;User ID={1};Password={2};Pooling=True;MultipleActiveResultSets=True;Connect Timeout=120;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite",
-    "PRODConnection": "Data Source=10.1.222.181;Initial Catalog={0};Integrated Security=False;User ID={1};Password={2};Pooling=True;MultipleActiveResultSets=True;Connect Timeout=120;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite",
-    "UATConnection": "Data Source=10.1.223.18;Initial Catalog={0};Integrated Security=False;User ID={1};Password={2};Pooling=True;MultipleActiveResultSets=True;Connect Timeout=120;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite",
-    "SITConnection": "Data Source=10.1.224.17;Initial Catalog={0};Integrated Security=False;User ID={1};Password={2};Pooling=True;MultipleActiveResultSets=True;Connect Timeout=120;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite",
-    "DEVConnection": "Data Source=10.1.225.14;Initial Catalog={0};Integrated Security=False;User ID={1};Password={2};Pooling=True;MultipleActiveResultSets=True;Connect Timeout=120;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite"
-  },
+    "TableName": "CHGMChargeItem,ODRMPackageOrder",
 
+  },
+  "TargetTable": {
+    "Tables": "ODRMPackageOrder,CHGMChargeItem",
+    "ODRMPackageOrder": {
+      "MailTo": "v-vyin@microsoft.com"
+    },
+    "CHGMChargeItem": {
+      "MailTo": "lovemath0630@gmail.com"
+    }
+
+  },
 
   "SystemName": "MigrationDocuments"
 }

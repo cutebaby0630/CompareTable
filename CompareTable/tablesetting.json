@@ -1,0 +1,8 @@
+{
+  "ConnectionStrings": {
+    "TableName": "CHGMChargeItem,ODRMPackageOrder"
+  },
+
+
+  "SystemName": "MigrationDocuments"
+}

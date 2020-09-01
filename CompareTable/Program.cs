@@ -5,42 +5,15 @@ using OfficeOpenXml.Style;
 using SqlServerHelper.Core;
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Data;
 using System.Drawing;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using LicenseContext = OfficeOpenXml.LicenseContext;
 
 namespace CompareTable
 {
-    public static class ExcelExtensions
-    {
-        // SetQuickStyle，指定前景色/背景色/水平對齊
-        public static void SetQuickStyle(this ExcelRange range,
-            Color fontColor,
-            Color bgColor = default(Color),
-            ExcelHorizontalAlignment hAlign = ExcelHorizontalAlignment.Left)
-        {
-            range.Style.Font.Color.SetColor(fontColor);
-            if (bgColor != default(Color))
-            {
-                range.Style.Fill.PatternType = ExcelFillStyle.Solid; // 一定要加這行..不然會報錯
-                range.Style.Fill.BackgroundColor.SetColor(bgColor);
-            }
-            range.Style.HorizontalAlignment = hAlign;
-        }
 
-        //讓文字上有連結
-        public static void SetHyperlink(this ExcelRange range, Uri uri)
-        {
-            range.Hyperlink = uri;
-            range.Style.Font.UnderLine = true;
-            range.Style.Font.Color.SetColor(Color.Blue);
-        }
-    }
     class Program
     {
         static void Main(string[] args)
@@ -49,13 +22,23 @@ namespace CompareTable
             Directory.CreateDirectory(fliepath);
             //Step1. 從182取出table 放入#tabl
             //Step1.1 連線到225.17
-            string[] tablenames = new string[] { "CHGMChargeItem", "ODRMPackageOrder" };
+            //string[] tablenames = new string[] { "CHGMChargeItem", "ODRMPackageOrder" };
             //var tablename = "CHGMChargeItem";
+
+            /*Console.WriteLine($"AppId = {configg["AppId"]}");
+            Console.WriteLine($"AppId = {configg["Player:AppId"]}");
+            Console.WriteLine($"Key = {configg["Player:Key"]}");
+            Console.WriteLine($"Connection String = {configg["ConnectionStrings:DefaultConnectionString"]}");
+        */
+
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsetting.json", optional: true, reloadOnChange: true).Build();
+            
             string connString_default = config.GetConnectionString("DefaultConnection");
             string connString_prod = config.GetConnectionString("PRODConnection");
-            string comparetable = null;
-
+            string[] tablenames = config.GetConnectionString("TableName").Split(",");
+            foreach (string test in tablenames) { 
+            Console.WriteLine($"{config[$"TargetTable:{test}:MailTo"]}");
+            }
             List<CompareTables> compareTables = new List<CompareTables>();
             foreach (string tablename in tablenames)
             {
@@ -142,38 +125,7 @@ namespace CompareTable
 
         }
     }
-    #region -- DataTable to HTML--
-    class DatatableToHTML
-    {
-        public string ToHTML(DataTable dt)
-        {
-            try
-            {
-                string html = "<table>";
-                //add header row
-                html += @"<tr style=""background - color:#DDDDDD;font-size:12;"">";
-                for (int i = 0; i < dt.Columns.Count; i++)
-                    html += @"<td style=""font - family: Tahoma; font - size; 10; "">" + dt.Columns[i].ColumnName + "</td>";
-                html += "</tr>";
-                //add rows
-                for (int i = 0; i < dt.Rows.Count; i++)
-                {
-                    html += @"<tr style=""background - color:#DDDDDD;font-size:12;"">";
-                    for (int j = 0; j < dt.Columns.Count; j++)
-                        html += @"<td style=""font - family: Tahoma; font - size; 10; "">" + dt.Rows[i][j].ToString() + "</td>";
-                    html += "</tr>";
-                }
-                html += "</table>";
 
-                return html;
-            }
-            catch (Exception ex)
-            {
-                return null;
-            }
-        }
-    }
-    #endregion
     public class CompareTables
     {
         public string tableName { get; set; }
@@ -262,6 +214,33 @@ namespace CompareTable
             }
         }
 
+    }
+    #endregion
+    #region -- excel cell style --
+    public static class ExcelExtensions
+    {
+        // SetQuickStyle，指定前景色/背景色/水平對齊
+        public static void SetQuickStyle(this ExcelRange range,
+            Color fontColor,
+            Color bgColor = default(Color),
+            ExcelHorizontalAlignment hAlign = ExcelHorizontalAlignment.Left)
+        {
+            range.Style.Font.Color.SetColor(fontColor);
+            if (bgColor != default(Color))
+            {
+                range.Style.Fill.PatternType = ExcelFillStyle.Solid; // 一定要加這行..不然會報錯
+                range.Style.Fill.BackgroundColor.SetColor(bgColor);
+            }
+            range.Style.HorizontalAlignment = hAlign;
+        }
+
+        //讓文字上有連結
+        public static void SetHyperlink(this ExcelRange range, Uri uri)
+        {
+            range.Hyperlink = uri;
+            range.Style.Font.UnderLine = true;
+            range.Style.Font.Color.SetColor(Color.Blue);
+        }
     }
     #endregion
 }
