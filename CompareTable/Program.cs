@@ -18,12 +18,11 @@ namespace CompareTable
     {
         static void Main(string[] args)
         {
-            var fliepath = $@"C:\Users\v-vyin\SchedulerDB_ExcelFile\{"CompareTable" + DateTime.Now.ToString("yyyyMMddhhmm")}";
+            var fliepath = $@"D:\Leon\DBCompareTableConsole\CompareTable_Excel\{ DateTime.Now.ToString("yyyyMMdd")}";
             Directory.CreateDirectory(fliepath);
             //Step1. 從182取出table 放入#tabl
             //Step1.1 連線到225.17
             //string[] tablenames = new string[] { "CHGMChargeItem", "ODRMPackageOrder" };
-            string Mailto = null;
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsetting.json", optional: true, reloadOnChange: true).Build();
 
             string connString_default = config.GetConnectionString("DefaultConnection");
@@ -86,7 +85,7 @@ namespace CompareTable
                         //Step 3.將對應的List 丟到各Sheet中
                         ExcelWorksheet sheet = excel.Workbook.Worksheets.Add(compareTables[count].tableName);
                         //抽function
-                        int rowIndex = 2;
+                        int rowIndex = 1;
                         int colIndex = 1;
                         importDBData.ImportData(compareTables[count].compareTable, sheet, rowIndex, colIndex, compareTables[count].tableName);
                     
@@ -99,7 +98,14 @@ namespace CompareTable
                 //Step2. #table跟225.17中比較
                 //Step2.1 compare 兩個table
                 //Step2.2 將結果發Email
-                var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
+                //var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
+                IConfiguration config_email = new ConfigurationBuilder().AddJsonFile("emailsetting.json", optional: true, reloadOnChange: true).Build();
+                var helper = new SMTPHelper(config_email.GetConnectionString("FromAddressMail"),
+                                            config_email.GetConnectionString("FromAddressMailPassword"),
+                                            config_email.GetConnectionString("SMTPHost"),
+                                            int.Parse(config_email.GetConnectionString("SMTPPort")),
+                                            bool.Parse(config_email.GetConnectionString("SMTPEnableSsl")),
+                                            bool.Parse(config_email.GetConnectionString("UseDefaultCredentials")));
                 string subject = $"{compareTables[count].tableName}表格異動 {DateTime.Now.ToString("yyyyMMdd")}"; //信件主旨
                 string body = $"Hi All, \r\n\r\n{compareTables[count].tableName}_{DateTime.Now.ToString("yyyyMMdd")} 表格異動如附件，\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
                 string attachments = null;//附件
@@ -139,8 +145,7 @@ namespace CompareTable
             _rowIndex = rowIndex;
             _colIndex = colIndex;
             _dt = dt;
-            _sheet.Cells[_rowIndex - 1, _colIndex].Value = "返回目錄";
-            _sheet.Cells[_rowIndex - 1, _colIndex].SetHyperlink(new Uri($"#'目錄'!A1", UriKind.Relative));
+        
 
             //3.1塞columnName 到Row 
             for (int columnNameIndex = 0; columnNameIndex <= _dt.Columns.Count - 1; columnNameIndex++)

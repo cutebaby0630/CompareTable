@@ -8,13 +8,17 @@
 
   },
   "TargetTable": {
-    "Tables": "ODRMPackageOrder,CHGMChargeItem",
+    "Tables": "AUZMMenu,ODRMPackageOrder,CHGMChargeItem",
     "ODRMPackageOrder": {
       "toMail": "v-vyin@microsoft.com",
       "ccMail": "lovemath0630@gmail.com"
     },
     "CHGMChargeItem": {
-      "MailTo": "lovemath0630@gmail.com",
+      "toMail": "lovemath0630@gmail.com",
+      "ccMail": "v-vyin@microsoft.com"
+    },
+    "AUZMMenu": {
+      "toMail": "lovemath0630@gmail.com",
       "ccMail": "v-vyin@microsoft.com"
     }
 
