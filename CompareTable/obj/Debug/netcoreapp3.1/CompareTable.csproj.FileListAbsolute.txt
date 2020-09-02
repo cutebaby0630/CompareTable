@@ -86,4 +86,3 @@ C:\Users\user\Source\Repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\Com
 C:\Users\user\Source\Repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.dll
 C:\Users\user\Source\Repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.pdb
 C:\Users\user\Source\Repos\CompareTable\CompareTable\obj\Debug\netcoreapp3.1\CompareTable.genruntimeconfig.cache
-C:\Users\v-vyin\source\repos\CompareTable\CompareTable\bin\Debug\netcoreapp3.1\tablesetting.json

@@ -23,22 +23,13 @@ namespace CompareTable
             //Step1. 從182取出table 放入#tabl
             //Step1.1 連線到225.17
             //string[] tablenames = new string[] { "CHGMChargeItem", "ODRMPackageOrder" };
-            //var tablename = "CHGMChargeItem";
-
-            /*Console.WriteLine($"AppId = {configg["AppId"]}");
-            Console.WriteLine($"AppId = {configg["Player:AppId"]}");
-            Console.WriteLine($"Key = {configg["Player:Key"]}");
-            Console.WriteLine($"Connection String = {configg["ConnectionStrings:DefaultConnectionString"]}");
-        */
-
+            string Mailto = null;
             IConfiguration config = new ConfigurationBuilder().AddJsonFile("appsetting.json", optional: true, reloadOnChange: true).Build();
-            
+
             string connString_default = config.GetConnectionString("DefaultConnection");
             string connString_prod = config.GetConnectionString("PRODConnection");
-            string[] tablenames = config.GetConnectionString("TableName").Split(",");
-            foreach (string test in tablenames) { 
-            Console.WriteLine($"{config[$"TargetTable:{test}:MailTo"]}");
-            }
+            string[] tablenames = config[$"TargetTable:Tables"].Split(",");
+
             List<CompareTables> compareTables = new List<CompareTables>();
             foreach (string tablename in tablenames)
             {
@@ -74,54 +65,55 @@ namespace CompareTable
                 {
                     tableName = tablename,
                     compareTable = compare_dt,
-                    resultTable = resault_dt
+                    resultTable = resault_dt,
+                    toMail = $"{config[$"TargetTable:{tablename}:toMail"]}",
+                    ccMail = $"{config[$"TargetTable:{tablename}:ccMail"]}"
 
                 });
             }
 
-            var excelname = new FileInfo("CompareTable" + DateTime.Now.ToString("yyyyMMddhhdd") + ".xlsx");
             var importDBData = new ImportDBData();
 
 
             //ExcelPackage.LicenseContext = LicenseContext.Commercial;
-            ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
-            using (var excel = new ExcelPackage(excelname))
+            for (int count = 0; count <= compareTables.Count - 1; count++)
             {
-                importDBData.GenFirstSheet(excel, tablenames);
-
-                for (int sheetnum = 0; sheetnum <= tablenames.Length - 1; sheetnum++)
+                var excelname = new FileInfo(compareTables[count].tableName +"_" + DateTime.Now.ToString("yyyyMMddhhdd") + ".xlsx");
+                //ExcelPackage.LicenseContext = LicenseContext.Commercial;
+                ExcelPackage.LicenseContext = LicenseContext.NonCommercial;
+                using (var excel = new ExcelPackage(excelname))
                 {
-                    //Step 3.將對應的List 丟到各Sheet中
-                    ExcelWorksheet sheet = excel.Workbook.Worksheets.Add(tablenames[sheetnum]);
-                    //抽function
-                    int rowIndex = 2;
-                    int colIndex = 1;
-                    importDBData.ImportData(compareTables[sheetnum].compareTable, sheet, rowIndex, colIndex, compareTables[sheetnum].tableName);
+                        //Step 3.將對應的List 丟到各Sheet中
+                        ExcelWorksheet sheet = excel.Workbook.Worksheets.Add(compareTables[count].tableName);
+                        //抽function
+                        int rowIndex = 2;
+                        int colIndex = 1;
+                        importDBData.ImportData(compareTables[count].compareTable, sheet, rowIndex, colIndex, compareTables[count].tableName);
+                    
+                    // Step 4.Export EXCEL
+                    Byte[] bin = excel.GetAsByteArray();
+                    File.WriteAllBytes(fliepath.ToString() + @"\" + excelname, bin);
+
                 }
-                // Step 4.Export EXCEL
-                Byte[] bin = excel.GetAsByteArray();
-                File.WriteAllBytes(fliepath.ToString() + @"\" + excelname, bin);
 
+                //Step2. #table跟225.17中比較
+                //Step2.1 compare 兩個table
+                //Step2.2 將結果發Email
+                var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
+                string subject = $"{compareTables[count].tableName}表格異動 {DateTime.Now.ToString("yyyyMMdd")}"; //信件主旨
+                string body = $"Hi All, \r\n\r\n{compareTables[count].tableName}_{DateTime.Now.ToString("yyyyMMdd")} 表格異動如附件，\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
+                string attachments = null;//附件
+                var fileName = fliepath + @"\" + excelname;//附件位置
+                if (File.Exists(fileName.ToString()))
+                {
+                    attachments = fileName.ToString();
+                }
+                string toMailList = compareTables[count].toMail;//收件者
+                string ccMailList = compareTables[count].ccMail;//CC收件者
+
+                helper.SendMail(toMailList, ccMailList, null, subject, body, attachments);
             }
 
-
-
-            //Step2. #table跟225.17中比較
-            //Step2.1 compare 兩個table
-            //Step2.2 將結果發Email
-            var helper = new SMTPHelper("lovemath0630@gmail.com", "koormyktfbbacpmj", "smtp.gmail.com", 587, true, true); //寄出信email
-            string subject = $"表格異動 {DateTime.Now.ToString("yyyyMMdd")}"; //信件主旨
-            string body = $"Hi All, \r\n\r\n{DateTime.Now.ToString("yyyyMMdd")} 表格異動如附件，\r\n\r\n Best Regards, \r\n\r\n Vicky Yin";//信件內容
-            string attachments = null;//附件
-            var fileName = fliepath + @"\" + excelname;//附件位置
-            if (File.Exists(fileName.ToString()))
-            {
-                attachments = fileName.ToString();
-            }
-            string toMailList = "v-vyin@microsoft.com";//收件者
-            string ccMailList = "";//CC收件者
-
-            helper.SendMail(toMailList, ccMailList, null, subject, body, attachments);
 
         }
     }
@@ -131,6 +123,8 @@ namespace CompareTable
         public string tableName { get; set; }
         public DataTable resultTable { get; set; }
         public DataTable compareTable { get; set; }
+        public string toMail { get; set; }
+        public string ccMail { get; set; }
     }
     #region -- Data to excel
     public class ImportDBData
